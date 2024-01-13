@@ -5,9 +5,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.AlertDialogDefaults.containerColor
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,19 +21,24 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import com.cynthiawomentechsters.cynthianoteapp.Routes
+import com.cynthiawomentechsters.cynthianoteapp.view_model.NoteViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddNoteScreen() {
-    var addFirstTask by remember{ mutableStateOf("") }
-    var addSecondTask by remember{ mutableStateOf("") }
+fun AddNoteScreen(navController: NavController) {
+
+   val noteViewModel: NoteViewModel = viewModel()
+    var title by rememberSaveable { mutableStateOf(" ") }
+    var content by rememberSaveable { mutableStateOf(" ")   }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -42,10 +48,26 @@ fun AddNoteScreen() {
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.White
                 ),
+                navigationIcon = {
+                                 IconButton(onClick =
+                                 {
+                                     navController.popBackStack()
+                                 }) {
+                                     Icon(
+                                         imageVector = Icons.Default.ArrowBack,
+                                         contentDescription = "Back Button" ,
+                                         tint = Color.White
+
+                                     )
+                                 }
+                },
                 actions = {
-                    IconButton(onClick = {}) {
+                    IconButton(onClick = {
+                        noteViewModel.saveNote(title, content)
+                        navController.popBackStack()
+                    }) {
                         Icon(
-                            imageVector = Icons.Default.Search,
+                            imageVector = Icons.Default.Add,
                             contentDescription = "Note Search"
                         )
                     }
@@ -66,18 +88,18 @@ fun AddNoteScreen() {
             ) {
                 //Note app here
                 TextField(
-                    value = addFirstTask,
-                    onValueChange = { typeName -> addFirstTask = typeName },
-                    label = {Text("Add your first task")},
+                    value = title,
+                    onValueChange = { typeName -> title = typeName },
+                    label = {Text("Note title")},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 10.dp)
                         .padding(top = 10.dp)
                 )
                 TextField(
-                    value = addSecondTask,
-                    onValueChange = { typeName -> addSecondTask = typeName },
-                    label = {Text("Add your second task")},
+                    value = content,
+                    onValueChange = { typeName -> content = typeName },
+                    label = {Text("Note content")},
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 10.dp)
