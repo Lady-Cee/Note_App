@@ -13,6 +13,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -39,28 +40,35 @@ fun AddNoteScreen(navController: NavController) {
    val noteViewModel: NoteViewModel = viewModel()
     var title by rememberSaveable { mutableStateOf(" ") }
     var content by rememberSaveable { mutableStateOf(" ")   }
+
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Study Group 1 Note_App", fontSize = 16.sp) },
+                title = { Text(text = "Add Note", fontSize = 16.sp) },
                 colors = TopAppBarDefaults.smallTopAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = Color.White,
                     actionIconContentColor = Color.White
                 ),
-                navigationIcon = {
-                                 IconButton(onClick =
-                                 {
-                                     navController.popBackStack()
-                                 }) {
-                                     Icon(
-                                         imageVector = Icons.Default.ArrowBack,
-                                         contentDescription = "Back Button" ,
-                                         tint = Color.White
-
-                                     )
-                                 }
-                },
+//                navigationIcon = {
+//                    IconButton(onClick =
+//                    {
+//                        //saves the Note
+//                        noteViewModel.saveNote(title, content)
+//                        //take the user back
+//                        navController.popBackStack()
+//                    }) {
+//                        Icon(
+//                            imageVector = Icons.Default.ArrowBack,
+//                            contentDescription = "Back Button",
+//                             //tint = Color.White
+//
+//                        )
+//                    }
+//                }
+//            )
+//        },
+                //Tinus own
                 actions = {
                     IconButton(onClick = {
                         noteViewModel.saveNote(title, content)
@@ -84,26 +92,25 @@ fun AddNoteScreen(navController: NavController) {
             Column(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .padding(all = 8.dp)
                     .fillMaxSize()
             ) {
                 //Note app here
-                TextField(
+                OutlinedTextField(
+                    modifier = Modifier.fillMaxWidth(),
                     value = title,
-                    onValueChange = { typeName -> title = typeName },
-                    label = {Text("Note title")},
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                        .padding(top = 10.dp)
-                )
+                    onValueChange = { value -> title = value },
+                    label = {Text("Task")},
+                    )
+
                 TextField(
                     value = content,
-                    onValueChange = { typeName -> content = typeName },
-                    label = {Text("Note content")},
+                    onValueChange = { value -> content = value },
+                    label = {Text("Task Details")},
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 10.dp)
-                        .padding(top = 10.dp)
+//                        .padding(bottom = 10.dp)
+//                        .padding(top = 10.dp)
                 )
             }
         }
